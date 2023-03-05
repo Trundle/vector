@@ -28,6 +28,8 @@ pub mod azure_blob;
 pub mod azure_common;
 #[cfg(feature = "sinks-azure_monitor_logs")]
 pub mod azure_monitor_logs;
+#[cfg(feature = "sinks-azure_monitor_logs_dce")]
+pub mod azure_monitor_logs_dce;
 #[cfg(feature = "sinks-blackhole")]
 pub mod blackhole;
 #[cfg(feature = "sinks-clickhouse")]
@@ -187,6 +189,11 @@ pub enum Sinks {
     #[cfg(feature = "sinks-azure_monitor_logs")]
     #[configurable(metadata(docs::label = "Azure Monitor Logs"))]
     AzureMonitorLogs(azure_monitor_logs::AzureMonitorLogsConfig),
+
+    /// Publish log events to the Azure Monitor Logs service via a Data Collection Endpoint.
+    #[cfg(feature = "sinks-azure_monitor_logs_dce")]
+    #[configurable(metadata(docs::label = "Azure Monitor Logs Data Collection Endpoint"))]
+    AzureMonitorLogsDce(azure_monitor_logs_dce::AzureMonitorLogsDceConfig),
 
     /// Send observability events nowhere, which can be useful for debugging purposes.
     #[cfg(feature = "sinks-blackhole")]
@@ -452,6 +459,8 @@ impl NamedComponent for Sinks {
             Self::AzureBlob(config) => config.get_component_name(),
             #[cfg(feature = "sinks-azure_monitor_logs")]
             Self::AzureMonitorLogs(config) => config.get_component_name(),
+            #[cfg(feature = "sinks-azure_monitor_logs_dce")]
+            Self::AzureMonitorLogsDce(config) => config.get_component_name(),
             #[cfg(feature = "sinks-blackhole")]
             Self::Blackhole(config) => config.get_component_name(),
             #[cfg(feature = "sinks-clickhouse")]
